@@ -30,6 +30,7 @@ class TransferService : Service() {
     private var web: WebServer? = null
     private var wake: PowerManager.WakeLock? = null
     private var wifiLock: WifiManager.WifiLock? = null
+    private var fastLock: WifiManager.WifiLock? = null
     private var notifJob: Job? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -124,10 +125,14 @@ class TransferService : Service() {
                 .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "flikk:transfer").apply { setReferenceCounted(false); acquire(6 * 60 * 60 * 1000L) }
             if (wifiLock == null) wifiLock = (applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager)
                 .createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "flikk:wifi").apply { setReferenceCounted(false); acquire() }
+            // Wi-Fi power save off — transfer speed kosam
+            if (fastLock == null) fastLock = (applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager)
+                .createWifiLock(WifiManager.WIFI_MODE_FULL_LOW_LATENCY, "flikk:fast").apply { setReferenceCounted(false); acquire() }
         } else {
             try { wake?.release() } catch (_: Exception) { }
             try { wifiLock?.release() } catch (_: Exception) { }
-            wake = null; wifiLock = null
+            try { fastLock?.release() } catch (_: Exception) { }
+            wake = null; wifiLock = null; fastLock = null
         }
     }
 

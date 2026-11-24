@@ -123,6 +123,13 @@ object P2p {
         }
     }
 
+    /** Ippudu join ayina group band (5 GHz / 2.4 GHz) */
+    suspend fun band(ctx: Context): String? {
+        val (m, c) = init(ctx) ?: return null
+        val f = groupInfo(m, c)?.frequency ?: return null
+        return when { f >= 5900 -> "6 GHz"; f >= 4900 -> "5 GHz"; f > 0 -> "2.4 GHz"; else -> null }
+    }
+
     suspend fun leave(ctx: Context) {
         val (m, c) = init(ctx) ?: return
         action { m.clearLocalServices(c, it) }

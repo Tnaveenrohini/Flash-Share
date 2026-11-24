@@ -5,7 +5,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.util.Base64
 import java.io.FileOutputStream
+import java.util.BitSet
 
 /**
  * Vachina files Downloads/Flikk Share/ lo save. Transfer madhyalo aagithe,
@@ -22,7 +24,20 @@ object Storage {
         d.split('/', '\\').map { it.trim() }.filter { it.isNotEmpty() && it != "." && it != ".." }
             .joinToString("/") { clean(it) }
 
-    class Slot(val uri: Uri, val offset: Long, val key: String)
+    /** bits = ee file lo already vachina 4MB mukkalu (resume ki) */
+    class Slot(val uri: Uri, val key: String, val bits: BitSet = BitSet()) {
+        val offset: Long get() = 0
+    }
+
+    private fun decodeBits(s: String): BitSet = try {
+        if (s.isEmpty()) BitSet() else BitSet.valueOf(Base64.decode(s, Base64.NO_WRAP))
+    } catch (_: Exception) { BitSet() }
+
+    fun saveBits(slot: Slot) {
+        if (slot.key.isEmpty()) return
+        val b = synchronized(slot.bits) { slot.bits.toByteArray() }
+        resume.edit().putString(slot.key, "${slot.uri}|${Base64.encodeToString(b, Base64.NO_WRAP)}").apply()
+    }
 
     /** Kotha entry create cheyyi leda paata (half) entry ni resume ki ivvu */
     fun prepare(ctx: Context, name: String, relDir: String, size: Long, mime: String, key: String?): Slot {
@@ -30,11 +45,8 @@ object Storage {
         if (key != null) {
             resume.getString(key, null)?.let { saved ->
                 val uri = Uri.parse(saved.substringBefore('|'))
-                val written = saved.substringAfter('|').toLongOrNull() ?: 0
                 try {
-                    cr.openFileDescriptor(uri, "r")?.use { pfd ->
-                        if (pfd.statSize >= written && written <= size) return Slot(uri, written, key)
-                    }
+                    cr.openFileDescriptor(uri, "r")?.use { return Slot(uri, key, decodeBits(saved.substringAfter('|', ""))) }
                 } catch (_: Exception) { }
                 resume.edit().remove(key).apply()
             }
@@ -48,8 +60,8 @@ object Storage {
         }
         val uri = cr.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
             ?: error("Couldn't create $name in Downloads")
-        if (key != null) resume.edit().putString(key, "$uri|0").apply()
-        return Slot(uri, 0, key ?: "")
+        if (key != null) resume.edit().putString(key, "$uri|").apply()
+        return Slot(uri, key ?: "")
     }
 
     class Writer(ctx: Context, val slot: Slot) : AutoCloseable {
@@ -67,10 +79,6 @@ object Storage {
         fun write(b: ByteArray, len: Int) {
             fos.write(b, 0, len)
             written += len
-        }
-
-        fun checkpoint() {
-            if (slot.key.isNotEmpty()) resume.edit().putString(slot.key, "${slot.uri}|$written").apply()
         }
 
         override fun close() {
