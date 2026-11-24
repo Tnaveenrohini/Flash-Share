@@ -52,9 +52,17 @@ class SendActivity : BaseActivity() {
     private val pickFiles = registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
         addUris(uris, persist = true)
     }
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(500)) { uris ->
-        addUris(uris, persist = false)
+    // Photo picker: phone allow chese max (sadharanamga 100) — ekkuva adigithe picker vente close avthundi
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+        if (uris.isEmpty() && android.os.SystemClock.elapsedRealtime() - mediaOpenedAt < 1500) {
+            // picker open avvakundane return ayyindi — gallery / file manager tho try
+            pickMediaDocs.launch(arrayOf("image/*", "video/*"))
+        } else addUris(uris, persist = false)
     }
+    private val pickMediaDocs = registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        addUris(uris, persist = true)
+    }
+    private var mediaOpenedAt = 0L
     private val pickFolder = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         if (uri != null) addFolder(uri)
     }
@@ -85,9 +93,7 @@ class SendActivity : BaseActivity() {
                 chips.addView(c, lp(0, -2, 1f).apply { setMargins(dp(4), 0, dp(4), 0) })
             }
             chip(R.drawable.ic_file, R.string.pick_files) { pickFiles.launch(arrayOf("*/*")) }
-            chip(R.drawable.ic_photo, R.string.pick_media) {
-                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
-            }
+            chip(R.drawable.ic_photo, R.string.pick_media) { pickPhotosVideos() }
             chip(R.drawable.ic_folder, R.string.pick_folder) { pickFolder.launch(null) }
             chip(R.drawable.ic_apps, R.string.pick_apps) { pickApps() }
             addView(chips, lp().apply { setMargins(-dp(4), dp(4), -dp(4), 0) })
@@ -215,6 +221,17 @@ class SendActivity : BaseActivity() {
             items += added.filter { a -> items.none { it.uri == a.uri } }
             refresh()
         }
+    }
+
+    private fun pickPhotosVideos() {
+        if (ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(this)) {
+            mediaOpenedAt = android.os.SystemClock.elapsedRealtime()
+            try {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+                return
+            } catch (_: Exception) { }
+        }
+        pickMediaDocs.launch(arrayOf("image/*", "video/*"))
     }
 
     private fun addFolder(tree: Uri) {

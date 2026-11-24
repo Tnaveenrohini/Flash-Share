@@ -14,8 +14,8 @@ android {
         // Wi-Fi Direct "QR tho direct connect" (WifiP2pConfig.Builder) Android 10+ lo matrame untundi
         minSdk = 29
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
     }
 
     // Fixed key: prathi kotha build paata app meedha update ga install avthundi.
