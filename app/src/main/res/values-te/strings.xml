@@ -33,7 +33,7 @@
     <string name="receive_title">తీసుకోవడానికి రెడీ</string>
     <string name="receive_hint">ఇంకో ఫోన్‌లో Flikk Share → పంపండి → QR స్కాన్ చేసి పంపండి</string>
     <string name="starting">రెడీ అవుతోంది…</string>
-    <string name="mode_direct">⚡ Wi-Fi Direct రెడీ · %s</string>
+    <string name="mode_direct">⚡ Wi-Fi Direct · %s · దగ్గరి ఫోన్లకు కనిపిస్తుంది</string>
     <string name="mode_lan">అదే Wi-Fi లో మాత్రమే (Wi-Fi Direct అందుబాటులో లేదు)</string>
     <string name="saved_to">Downloads/Flikk Share లో సేవ్ అవుతాయి</string>
 
@@ -74,4 +74,17 @@
     <string name="notif_channel">ట్రాన్స్‌ఫర్లు</string>
     <string name="notif_receiving">ఫైల్స్ తీసుకోవడానికి రెడీ</string>
     <string name="notif_pc">PC తో షేర్ అవుతోంది</string>
+    <string name="radar_title">దగ్గరలో ఉన్న\nఫోన్ల కోసం వెతుకుతోంది…</string>
+    <string name="radar_sub">ఫోన్‌ని టాప్ చేసి పంపండి, లేదా దాని QR స్కాన్ చేయండి</string>
+    <string name="radar_none">ఇంకా ఫోన్లు లేవు — ఇంకో ఫోన్‌లో Flikk Share → తీసుకోండి ఓపెన్ చేయండి</string>
+    <string name="radar_wifi_off">దగ్గరి ఫోన్లు కనిపించడానికి Wi-Fi ఆన్ చేయండి · ఇక్కడ టాప్ చేయండి</string>
+    <string name="need_perm_short">ఫోన్లు వెతకడానికి “Nearby devices” అనుమతి ఇవ్వండి · ఇక్కడ టాప్ చేయండి</string>
+    <string name="pc_instead">బదులుగా PC తో షేర్ చేయండి</string>
+    <string name="send_to">%s కి పంపండి</string>
+    <string name="nearby_label">దగ్గరి ఫోన్లు · టాప్ చేసి పంపండి</string>
+    <string name="incoming">మీకు %1$d ఫైల్స్ పంపాలనుకుంటున్నారు (%2$s)</string>
+    <string name="accept">తీసుకో</string>
+    <string name="decline">వద్దు</string>
+    <string name="waiting_accept">%s Accept చేసే వరకు ఆగుతోంది…</string>
+    <string name="declined">%s వద్దన్నారు</string>
 </resources>

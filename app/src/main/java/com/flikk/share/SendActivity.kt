@@ -19,7 +19,9 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -41,6 +43,11 @@ class SendActivity : BaseActivity() {
     private lateinit var sendBtn: MaterialButton
     private lateinit var pcBtn: MaterialButton
     private lateinit var adapter: ItemAdapter
+    private lateinit var nearbyBox: LinearLayout
+    private lateinit var nearbyRow: LinearLayout
+    private var preset: NearbyDevice? = null
+
+    companion object { const val EXTRA_DEVICE = "device" }
 
     private val pickFiles = registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
         addUris(uris, persist = true)
@@ -61,7 +68,8 @@ class SendActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         askNotifications()
-        screen(getString(R.string.send), scroll = false) {
+        preset = Nearby.find(intent.getStringExtra(EXTRA_DEVICE))
+        screen(preset?.let { getString(R.string.send_to, it.name) } ?: getString(R.string.send), scroll = false) {
             setPadding(dp(20), 0, dp(20), dp(16))
             val chips = LinearLayout(this@SendActivity).apply { orientation = LinearLayout.HORIZONTAL }
             fun chip(ic: Int, s: Int, f: () -> Unit) {
@@ -100,9 +108,20 @@ class SendActivity : BaseActivity() {
             }
             addView(rv, lp(h = 0, weight = 1f))
 
-            sendBtn = button(getString(R.string.scan_send)) { scanQr() }
-            sendBtn.setIconResource(R.drawable.ic_qr)
-            sendBtn.iconTint = android.content.res.ColorStateList.valueOf(android.graphics.Color.BLACK)
+            nearbyBox = vbox().apply { visibility = View.GONE }
+            nearbyBox.addView(label(getString(R.string.nearby_label), 13f, C.MUTED))
+            nearbyRow = hbox()
+            nearbyBox.addView(android.widget.HorizontalScrollView(this@SendActivity).apply {
+                isHorizontalScrollBarEnabled = false
+                addView(nearbyRow)
+            }, lp().apply { topMargin = dp(8) })
+            addView(nearbyBox, lp().apply { topMargin = dp(10) })
+
+            sendBtn = button(preset?.let { getString(R.string.send_to, it.name) } ?: getString(R.string.scan_send)) {
+                val p = preset
+                if (p != null) withWifiReady { startSend(p.toTarget()) } else scanQr()
+            }
+            sendBtn.setIconResource(if (preset != null) R.drawable.ic_send else R.drawable.ic_qr)
             sendBtn.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
             addView(sendBtn, lp().apply { topMargin = dp(10) })
             pcBtn = button(getString(R.string.send_pc_instead), primary = false) {
@@ -113,6 +132,42 @@ class SendActivity : BaseActivity() {
         }
         handleShareIntent(intent)
         refresh()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Nearby.devices.collect { showNearby(it) }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (preset == null && hasNearbyPerm() && radiosReady()) Nearby.start(this)
+    }
+
+    override fun onPause() {
+        Nearby.stop(this)
+        super.onPause()
+    }
+
+    private fun showNearby(list: List<NearbyDevice>) {
+        nearbyBox.visibility = if (preset == null && list.isNotEmpty() && items.isNotEmpty()) View.VISIBLE else View.GONE
+        nearbyRow.removeAllViews()
+        list.forEach { d ->
+            val chip = hbox().apply {
+                background = round(C.SURFACE, dp(24).toFloat(), C.BORDER, dp(1))
+                setPadding(dp(6), dp(6), dp(16), dp(6))
+                isClickable = true
+                contentDescription = getString(R.string.send_to, d.name)
+                setOnClickListener { if (items.isNotEmpty()) withWifiReady { startSend(d.toTarget()) } }
+            }
+            chip.addView(label(d.initial, 15f, bold = true).apply {
+                gravity = Gravity.CENTER
+                background = round(C.ACCENT, dp(18).toFloat())
+                setTextColor(C.ON_ACCENT)
+            }, lp(dp(36), dp(36)))
+            chip.addView(label(d.name, 14f).apply { setPadding(dp(10), 0, 0, 0); maxLines = 1 })
+            nearbyRow.addView(chip, lp(-2, -2).apply { rightMargin = dp(8) })
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -254,6 +309,7 @@ class SendActivity : BaseActivity() {
         sendBtn.isEnabled = items.isNotEmpty()
         sendBtn.alpha = if (items.isEmpty()) 0.4f else 1f
         pcBtn.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        if (::nearbyBox.isInitialized) showNearby(Nearby.devices.value)
         adapter.notifyDataSetChanged()
     }
 

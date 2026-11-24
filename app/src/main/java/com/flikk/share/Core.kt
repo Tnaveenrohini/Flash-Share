@@ -133,6 +133,11 @@ data class TState(
 
 data class ReceiveInfo(val target: Target?, val direct: Boolean, val band: String, val error: String = "")
 
+/** Radar nunchi vachina request — receiver Accept / Decline cheyyali */
+class Incoming(val peer: String, val count: Int, val bytes: Long) {
+    val answer = kotlinx.coroutines.CompletableDeferred<Boolean>()
+}
+
 data class WebInfo(val urls: List<String>, val shared: Int, val downloads: Int, val uploads: Int, val base: String = "")
 
 /** Activities, Service madhya share chese state */
@@ -140,6 +145,7 @@ object Hub {
     val state = MutableStateFlow(TState())
     val receive = MutableStateFlow<ReceiveInfo?>(null)
     val web = MutableStateFlow<WebInfo?>(null)
+    val incoming = MutableStateFlow<Incoming?>(null)
 
     @Volatile var pending: List<SendItem> = emptyList()
     @Volatile var lastTarget: Target? = null

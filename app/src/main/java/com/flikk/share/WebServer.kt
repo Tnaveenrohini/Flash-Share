@@ -195,15 +195,15 @@ class WebServer(private val ctx: Context, private val items: List<SendItem>) {
             "<a class=btn href=\"all.zip\">Download all (.zip)</a><div style=\"margin-top:12px\">$rows</div></div>"
         val page = """<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
 <title>Flikk Share · ${esc(Prefs.deviceName)}</title><style>
-*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#0B0F17;color:#fff;font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .w{max-width:760px;margin:0 auto;padding:28px 18px}h1{font-size:22px;letter-spacing:.12em;margin:0}
-.m{color:#a3a3a3;margin:4px 0 24px}.c{background:#141414;border-radius:18px;padding:18px;margin-bottom:18px}
-h2{font-size:16px;margin:0 0 12px}.f{display:flex;justify-content:space-between;gap:12px;padding:12px 4px;border-top:1px solid #1f1f1f;color:#fff;text-decoration:none}
-.f:hover{background:#1c1c1c}.f span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f b{color:#a3a3a3;font-weight:500;flex:none}
-.btn{display:inline-block;background:#fff;color:#000;border:0;border-radius:24px;padding:11px 20px;font-weight:600;text-decoration:none;cursor:pointer}
-#drop{border:2px dashed #333;border-radius:14px;padding:30px;text-align:center;color:#a3a3a3;cursor:pointer}
-#drop.on{border-color:#fff;color:#fff}.bar{height:6px;background:#1f1f1f;border-radius:3px;margin-top:8px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:#fff}.up{margin-top:12px;font-size:14px}.foot{color:#555;font-size:12px;text-align:center;margin-top:24px}
+.m{color:#A9B4C8;margin:4px 0 24px}.c{background:#151B26;border-radius:18px;padding:18px;margin-bottom:18px}
+h2{font-size:16px;margin:0 0 12px}.f{display:flex;justify-content:space-between;gap:12px;padding:12px 4px;border-top:1px solid #1E2838;color:#fff;text-decoration:none}
+.f:hover{background:#1A2230}.f span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f b{color:#A9B4C8;font-weight:500;flex:none}
+.btn{display:inline-block;background:#7CC4FF;color:#0B0F17;border:0;border-radius:24px;padding:11px 20px;font-weight:600;text-decoration:none;cursor:pointer}
+#drop{border:2px dashed #2A3548;border-radius:14px;padding:30px;text-align:center;color:#A9B4C8;cursor:pointer}
+#drop.on{border-color:#7CC4FF;color:#fff}.bar{height:6px;background:#1E2838;border-radius:3px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#7CC4FF}.up{margin-top:12px;font-size:14px}.foot{color:#555;font-size:12px;text-align:center;margin-top:24px}
 </style></head><body><div class=w>
 <h1>FLIKK SHARE</h1><div class=m>Connected to ${esc(Prefs.deviceName)}</div>
 $filesCard

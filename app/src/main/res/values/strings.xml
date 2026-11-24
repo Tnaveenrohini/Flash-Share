@@ -36,7 +36,7 @@
     <string name="receive_title">Ready to receive</string>
     <string name="receive_hint">On the other phone open Flikk Share → Send → Scan QR &amp; send</string>
     <string name="starting">Getting ready…</string>
-    <string name="mode_direct">⚡ Wi-Fi Direct ready · %s</string>
+    <string name="mode_direct">⚡ Wi-Fi Direct · %s · visible to nearby phones</string>
     <string name="mode_lan">Same Wi-Fi only (Wi-Fi Direct not available)</string>
     <string name="saved_to">Saved to Downloads/Flikk Share</string>
 
@@ -77,4 +77,17 @@
     <string name="notif_channel">Transfers</string>
     <string name="notif_receiving">Ready to receive files</string>
     <string name="notif_pc">Sharing with PC</string>
+    <string name="radar_title">Looking for\nnearby phones…</string>
+    <string name="radar_sub">Tap a phone to send, or scan its QR</string>
+    <string name="radar_none">No phones yet — on the other phone open Flikk Share → Receive</string>
+    <string name="radar_wifi_off">Turn on Wi-Fi to find nearby phones · tap here</string>
+    <string name="need_perm_short">Allow “Nearby devices” to find phones · tap here</string>
+    <string name="pc_instead">Share with a PC instead</string>
+    <string name="send_to">Send to %s</string>
+    <string name="nearby_label">Nearby phones · tap to send</string>
+    <string name="incoming">wants to send you %1$d files (%2$s)</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="waiting_accept">Waiting for %s to accept…</string>
+    <string name="declined">%s declined</string>
 </resources>

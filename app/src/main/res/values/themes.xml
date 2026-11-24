@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.Flikk" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnPrimary">#000000</item>
+        <item name="colorOnPrimary">#0B0F17</item>
         <item name="colorSecondary">@color/accent</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text</item>

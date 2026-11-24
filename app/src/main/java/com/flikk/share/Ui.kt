@@ -16,14 +16,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
+/** Radar design palette */
 object C {
-    const val BG = Color.BLACK
-    val SURFACE = Color.parseColor("#141414")
-    val LINE = Color.parseColor("#1F1F1F")
+    val BG = Color.parseColor("#0B0F17")
+    val SURFACE = Color.parseColor("#151B26")
+    val LINE = Color.parseColor("#1E2838")
+    val BORDER = Color.parseColor("#2A3548")
     const val TEXT = Color.WHITE
-    val MUTED = Color.parseColor("#A3A3A3")
-    val GOOD = Color.parseColor("#3DDC84")
-    val BAD = Color.parseColor("#FF5C5C")
+    val MUTED = Color.parseColor("#A9B4C8")
+    val SOFT = Color.parseColor("#C9D4E8")
+    val ACCENT = Color.parseColor("#7CC4FF")
+    val ON_ACCENT = Color.parseColor("#0B0F17")
+    val GOOD = Color.parseColor("#7CC4FF")
+    val BAD = Color.parseColor("#FF7A7A")
 }
 
 fun Context.dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
@@ -63,13 +68,16 @@ fun Context.button(s: CharSequence, primary: Boolean = true, onClick: () -> Unit
         cornerRadius = dp(28)
         minHeight = dp(54)
         insetTop = 0; insetBottom = 0
+        typeface = android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.BOLD)
         if (primary) {
-            backgroundTintList = ColorStateList.valueOf(Color.WHITE)
-            setTextColor(Color.BLACK)
+            backgroundTintList = ColorStateList.valueOf(C.ACCENT)
+            setTextColor(C.ON_ACCENT)
+            iconTint = ColorStateList.valueOf(C.ON_ACCENT)
         } else {
             backgroundTintList = ColorStateList.valueOf(C.SURFACE)
             setTextColor(Color.WHITE)
-            strokeColor = ColorStateList.valueOf(Color.parseColor("#33FFFFFF"))
+            iconTint = ColorStateList.valueOf(Color.WHITE)
+            strokeColor = ColorStateList.valueOf(C.BORDER)
             strokeWidth = dp(1)
         }
         setOnClickListener { onClick() }
@@ -125,8 +133,8 @@ fun Context.card(iconRes: Int, title: String, sub: String, big: Boolean, onClick
     }
     box.setOnClickListener { onClick() }
     val circle = FrameLayout(this).apply {
-        background = round(if (big) Color.WHITE else C.LINE, dp(28).toFloat())
-        addView(icon(iconRes, if (big) 30 else 22, if (big) Color.BLACK else Color.WHITE).apply {
+        background = round(if (big) C.ACCENT else C.LINE, dp(28).toFloat())
+        addView(icon(iconRes, if (big) 30 else 22, if (big) C.ON_ACCENT else Color.WHITE).apply {
             layoutParams = FrameLayout.LayoutParams(dp(if (big) 30 else 22), dp(if (big) 30 else 22), Gravity.CENTER)
         })
     }

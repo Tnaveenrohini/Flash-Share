@@ -7,6 +7,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
@@ -116,6 +121,8 @@ object Sender {
 
         var s: Socket? = null
         var via = ""
+        val nearby = t.token.isEmpty()
+        try { Nearby.stopNow(ctx) } catch (_: Exception) { }
         // 1) Wi-Fi Direct (fastest, router avasaram ledu). 2) Kudarakapothe same Wi-Fi.
         if (t.ssid.isNotEmpty()) {
             val host = try { P2p.join(ctx, t.ssid, t.pass) } catch (e: Exception) { Log.w(TAG, "join", e); null }
@@ -148,9 +155,18 @@ object Sender {
                 fa.put(JSONObject().put("n", it.name).put("p", it.relDir).put("s", it.size)
                     .put("m", it.mime).put("k", it.key))
             }
-            Proto.writeJson(out, JSONObject().put("t", t.token).put("n", Prefs.deviceName).put("f", fa))
+            Proto.writeJson(out, JSONObject().put("t", t.token).put("nb", nearby).put("n", Prefs.deviceName).put("f", fa))
+            if (nearby) {
+                // receiver Accept nokkali — 75 sec varaku wait
+                s.soTimeout = 75_000
+                Hub.state.value = Hub.state.value.copy(message = "accept")
+            }
             val resp = Proto.readJson(inp)
-            if (!resp.optBoolean("ok")) throw IOException(resp.optString("e", "Receiver said no"))
+            s.soTimeout = 30_000
+            if (!resp.optBoolean("ok")) {
+                val e = resp.optString("e", "Receiver said no")
+                throw IOException(if (e == "declined") ctx.getString(R.string.declined, t.name) else e)
+            }
             val offs = resp.getJSONArray("o")
             items.indices.forEach { meter.skip(it, offs.optLong(it, 0)) }
             Hub.state.value = meter.snapshot(Phase.TRANSFERRING)
@@ -225,17 +241,30 @@ object Receiver {
             ReceiveInfo(null, false, "", "Turn on Wi-Fi to receive")
         else ReceiveInfo(t, group != null, group?.third ?: "")
 
+        if (group != null) {
+            try {
+                P2p.advertise(ctx, mapOf("i" to Prefs.deviceId, "n" to Prefs.deviceName.take(40), "s" to group.first,
+                    "p" to group.second, "o" to port.toString(), "b" to group.third))
+            } catch (e: Exception) { Log.w(TAG, "advertise", e) }
+        }
         try {
-            while (true) {
-                currentCoroutineContext().ensureActive()
-                val c = try { ss.accept() } catch (e: Exception) { if (server == null) return else throw e }
-                client = c
-                try { handle(ctx, c, token) } catch (e: Exception) {
-                    Log.w(TAG, "receive failed", e)
-                } finally {
-                    try { c.close() } catch (_: Exception) { }
-                    client = null
+            coroutineScope {
+                val keep = launch {
+                    while (isActive) { delay(20_000); try { P2p.ping(ctx) } catch (_: Exception) { } }
                 }
+                try {
+                    while (true) {
+                        currentCoroutineContext().ensureActive()
+                        val c = try { ss.accept() } catch (e: Exception) { if (server == null) break else throw e }
+                        client = c
+                        try { handle(ctx, c, token) } catch (e: Exception) {
+                            Log.w(TAG, "receive failed", e)
+                        } finally {
+                            try { c.close() } catch (_: Exception) { }
+                            client = null
+                        }
+                    }
+                } finally { keep.cancel() }
             }
         } finally {
             try { ss.close() } catch (_: Exception) { }
@@ -251,16 +280,29 @@ object Receiver {
         val out = DataOutputStream(BufferedOutputStream(s.getOutputStream()))
         if (inp.readInt() != Proto.MAGIC) return
         val head = Proto.readJson(inp)
-        if (head.optString("t") != token) {
-            Proto.writeJson(out, JSONObject().put("ok", false).put("e", "Old QR code — scan again"))
-            return
-        }
         val peer = head.optString("n", "Phone")
         val fa = head.getJSONArray("f")
         data class F(val name: String, val dir: String, val size: Long, val mime: String, val key: String)
         val files = (0 until fa.length()).map {
             val o = fa.getJSONObject(it)
             F(o.optString("n", "file"), o.optString("p", ""), o.optLong("s"), o.optString("m", "application/octet-stream"), o.optString("k"))
+        }
+        if (head.optString("t") != token) {
+            val fromRadar = head.optBoolean("nb") && head.optString("t").isEmpty()
+            if (!fromRadar) {
+                Proto.writeJson(out, JSONObject().put("ok", false).put("e", "Old QR code — scan again"))
+                return
+            }
+            // QR scan cheyyaledu — receiver ni adugudam
+            val req = Incoming(peer, files.size, files.sumOf { it.size })
+            Hub.incoming.value = req
+            val ok = try {
+                runBlocking { withTimeoutOrNull(60_000) { req.answer.await() } } ?: false
+            } finally { Hub.incoming.value = null }
+            if (!ok) {
+                Proto.writeJson(out, JSONObject().put("ok", false).put("e", "declined"))
+                return
+            }
         }
         val slots = files.map { Storage.prepare(ctx, it.name, it.dir, it.size, it.mime, it.key) }
         val offs = JSONArray(); slots.forEach { offs.put(it.offset) }

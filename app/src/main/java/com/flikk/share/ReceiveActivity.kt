@@ -35,6 +35,7 @@ class ReceiveActivity : BaseActivity() {
     private lateinit var again: MaterialButton
     private lateinit var files: MaterialButton
     private var lastQr = ""
+    private var dialog: androidx.appcompat.app.AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +94,20 @@ class ReceiveActivity : BaseActivity() {
                         spinner.visibility = View.GONE
                         mode.setTextColor(if (info.direct) C.GOOD else C.MUTED)
                         mode.text = if (info.direct) getString(R.string.mode_direct, info.band) else getString(R.string.mode_lan)
+                    }
+                }
+                launch {
+                    Hub.incoming.collect { req ->
+                        dialog?.dismiss(); dialog = null
+                        if (req != null) {
+                            dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this@ReceiveActivity)
+                                .setTitle(req.peer)
+                                .setMessage(getString(R.string.incoming, req.count, fmtSize(req.bytes)))
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.accept) { _, _ -> req.answer.complete(true) }
+                                .setNegativeButton(R.string.decline) { _, _ -> req.answer.complete(false) }
+                                .show()
+                        }
                     }
                 }
                 Hub.state.collect { s ->

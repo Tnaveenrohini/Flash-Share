@@ -7,6 +7,9 @@ import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.WifiP2pDevice
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Looper
 import android.util.Log
 import kotlinx.coroutines.delay
@@ -122,7 +125,49 @@ object P2p {
 
     suspend fun leave(ctx: Context) {
         val (m, c) = init(ctx) ?: return
+        action { m.clearLocalServices(c, it) }
         action { m.removeGroup(c, it) }
+    }
+
+    // ---------- Nearby (radar): Wi-Fi Direct service discovery ----------
+    const val SERVICE = "_flikkshare._tcp"
+
+    /** Receiver: "nenu ikkada unna" ani chuttu unna phones ki cheppu */
+    suspend fun advertise(ctx: Context, record: Map<String, String>) {
+        val (m, c) = init(ctx) ?: return
+        action { m.clearLocalServices(c, it) }
+        val info = WifiP2pDnsSdServiceInfo.newInstance("Flikk-" + Prefs.deviceId, SERVICE, record)
+        val r = action { m.addLocalService(c, info, it) }
+        if (r != -1) Log.w(TAG, "addLocalService failed $r")
+        action { m.discoverPeers(c, it) }
+    }
+
+    /** Konni phones lo discoverable ga undadaniki peer discovery nadusthu undali */
+    suspend fun ping(ctx: Context) {
+        val (m, c) = init(ctx) ?: return
+        action { m.discoverPeers(c, it) }
+    }
+
+    fun listen(ctx: Context, onFound: (Map<String, String>, WifiP2pDevice) -> Unit) {
+        val (m, c) = init(ctx) ?: return
+        m.setDnsSdResponseListeners(c,
+            { _, _, _ -> },
+            { domain, rec, dev -> if (domain != null && domain.contains("_flikkshare") && rec != null && dev != null) onFound(rec, dev) })
+    }
+
+    suspend fun discover(ctx: Context) {
+        val (m, c) = init(ctx) ?: return
+        action { m.clearServiceRequests(c, it) }
+        action { m.addServiceRequest(c, WifiP2pDnsSdServiceRequest.newInstance(), it) }
+        action { m.discoverPeers(c, it) }
+        val r = action { m.discoverServices(c, it) }
+        if (r != -1) Log.w(TAG, "discoverServices failed $r")
+    }
+
+    suspend fun stopDiscovery(ctx: Context) {
+        val (m, c) = init(ctx) ?: return
+        action { m.clearServiceRequests(c, it) }
+        action { m.stopPeerDiscovery(c, it) }
     }
 
     /** Same Wi-Fi / hotspot lo ee phone IP addresses (p2p interface tappinchi) */

@@ -36,6 +36,11 @@ open class BaseActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 33) listOf(Manifest.permission.NEARBY_WIFI_DEVICES)
         else listOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
+    fun hasNearbyPerm() = needed().all(::granted)
+
+    fun radiosReady(): Boolean = P2p.wifiOn(this) &&
+        (Build.VERSION.SDK_INT > 32 || getSystemService(LocationManager::class.java).isLocationEnabled)
+
     fun withWifiReady(ok: () -> Unit) {
         pendingOk = ok
         val ask = needed().filterNot(::granted).toMutableList()

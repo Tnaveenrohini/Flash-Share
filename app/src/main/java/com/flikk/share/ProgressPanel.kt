@@ -13,7 +13,7 @@ class ProgressPanel(ctx: Context) : LinearLayout(ctx) {
         max = 1000
         trackCornerRadius = ctx.dp(4)
         trackThickness = ctx.dp(8)
-        setIndicatorColor(android.graphics.Color.WHITE)
+        setIndicatorColor(C.ACCENT)
         trackColor = C.LINE
     }
     private val speed = ctx.label("", 17f, bold = true).apply { gravity = Gravity.CENTER }
@@ -40,7 +40,7 @@ class ProgressPanel(ctx: Context) : LinearLayout(ctx) {
         via.text = if (s.via.isNotEmpty()) "⚡ " + c.getString(R.string.via, s.via) else ""
         when (s.phase) {
             Phase.CONNECTING -> {
-                title.text = c.getString(R.string.connecting, s.peer)
+                title.text = if (s.message == "accept") c.getString(R.string.waiting_accept, s.peer) else c.getString(R.string.connecting, s.peer)
                 pct.text = "…"; speed.text = ""
                 file.text = if (s.total > 0) c.getString(R.string.selected_summary, s.files.size, fmtSize(s.total)) else ""
             }
