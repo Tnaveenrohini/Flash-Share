@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Flikk Share</string>
+    <string name="brand" translatable="false">FLIKK SHARE</string>
+
+    <string name="visible_as">Visible as %s · tap to rename</string>
+    <string name="rename">Your phone\'s name</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
+    <string name="send_sub">Files, photos, videos, folders, apps</string>
+    <string name="receive">Receive</string>
+    <string name="receive_sub">Show a QR code for the other phone</string>
+    <string name="pc">Share with PC</string>
+    <string name="pc_sub">Any computer browser on the same Wi-Fi</string>
+    <string name="history">History</string>
+    <string name="history_sub">Files you sent and received</string>
+    <string name="footer">Made in India 🇮🇳 · Wi-Fi Direct · no internet, no data used</string>
+
+    <string name="pick_files">Files</string>
+    <string name="pick_media">Photos &amp; videos</string>
+    <string name="pick_folder">Folder</string>
+    <string name="pick_apps">Apps</string>
+    <string name="nothing_selected">Pick what you want to send</string>
+    <string name="selected_summary">%1$d items · %2$s</string>
+    <string name="scan_send">Scan QR &amp; send</string>
+    <string name="send_pc_instead">Send to a PC instead</string>
+    <string name="scan_prompt">Scan the QR code on the receiving phone</string>
+    <string name="bad_qr">That isn\'t a Flikk Share code</string>
+    <string name="reading_folder">Reading folder…</string>
+    <string name="loading_apps">Loading apps…</string>
+    <string name="add">Add</string>
+    <string name="clear">Clear</string>
+    <string name="split_apk">split app · may not install</string>
+
+    <string name="receive_title">Ready to receive</string>
+    <string name="receive_hint">On the other phone open Flikk Share → Send → Scan QR &amp; send</string>
+    <string name="starting">Getting ready…</string>
+    <string name="mode_direct">⚡ Wi-Fi Direct ready · %s</string>
+    <string name="mode_lan">Same Wi-Fi only (Wi-Fi Direct not available)</string>
+    <string name="saved_to">Saved to Downloads/Flikk Share</string>
+
+    <string name="connecting">Connecting to %s…</string>
+    <string name="connecting_plain">Connecting…</string>
+    <string name="sending_to">Sending to %s</string>
+    <string name="receiving_from">Receiving from %s</string>
+    <string name="done_sent">Sent %1$d files · %2$s</string>
+    <string name="done_recv">Received %1$d files · %2$s</string>
+    <string name="avg_speed">Average %s</string>
+    <string name="failed">Transfer stopped</string>
+    <string name="file_of">File %1$d of %2$d</string>
+    <string name="speed_eta">%1$s/s · %2$s left</string>
+    <string name="via">via %s</string>
+    <string name="retry">Retry (continues where it stopped)</string>
+    <string name="done">Done</string>
+    <string name="stop">Stop</string>
+    <string name="open_downloads">Open files</string>
+
+    <string name="pc_title">Share with PC</string>
+    <string name="pc_hint">Connect the computer to the same Wi-Fi as this phone (or to this phone\'s hotspot), then open this link in any browser:</string>
+    <string name="pc_no_wifi">Turn on Wi-Fi or your phone\'s hotspot first</string>
+    <string name="pc_files">%d files shared · the PC can also send files to this phone</string>
+    <string name="pc_stats">PC downloads: %1$d · received from PC: %2$d</string>
+    <string name="pc_choose">Choose files to share</string>
+
+    <string name="history_empty">Nothing yet. Files you send and receive show up here.</string>
+    <string name="sent">Sent</string>
+    <string name="received">Received</string>
+    <string name="from_pc">From PC</string>
+    <string name="interrupted">stopped</string>
+    <string name="clear_history">Clear history</string>
+
+    <string name="need_perm">Flikk Share needs “Nearby devices” (or Location on older phones) to connect phones directly over Wi-Fi. Nothing is uploaded anywhere.</string>
+    <string name="wifi_off">Turn on Wi-Fi (you don\'t need to connect to any network)</string>
+    <string name="location_off">Turn on Location — Android needs it for Wi-Fi Direct on this phone</string>
+    <string name="settings">Settings</string>
+    <string name="notif_channel">Transfers</string>
+    <string name="notif_receiving">Ready to receive files</string>
+    <string name="notif_pc">Sharing with PC</string>
+</resources>

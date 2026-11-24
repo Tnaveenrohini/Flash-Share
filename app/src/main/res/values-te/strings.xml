@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="visible_as">%s గా కనిపిస్తుంది · పేరు మార్చడానికి టాప్ చేయండి</string>
+    <string name="rename">మీ ఫోన్ పేరు</string>
+    <string name="save">సేవ్</string>
+    <string name="cancel">వద్దు</string>
+    <string name="send">పంపండి</string>
+    <string name="send_sub">ఫైల్స్, ఫోటోలు, వీడియోలు, ఫోల్డర్లు, యాప్స్</string>
+    <string name="receive">తీసుకోండి</string>
+    <string name="receive_sub">ఇంకో ఫోన్ కోసం QR కోడ్ చూపిస్తుంది</string>
+    <string name="pc">PC తో షేర్</string>
+    <string name="pc_sub">అదే Wi-Fi లో ఉన్న ఏ కంప్యూటర్ బ్రౌజర్ అయినా</string>
+    <string name="history">హిస్టరీ</string>
+    <string name="history_sub">మీరు పంపిన, తీసుకున్న ఫైల్స్</string>
+    <string name="footer">Made in India 🇮🇳 · Wi-Fi Direct · ఇంటర్నెట్ అవసరం లేదు, డేటా ఖర్చు కాదు</string>
+
+    <string name="pick_files">ఫైల్స్</string>
+    <string name="pick_media">ఫోటోలు &amp; వీడియోలు</string>
+    <string name="pick_folder">ఫోల్డర్</string>
+    <string name="pick_apps">యాప్స్</string>
+    <string name="nothing_selected">ఏం పంపాలో ఎంచుకోండి</string>
+    <string name="selected_summary">%1$d ఐటమ్స్ · %2$s</string>
+    <string name="scan_send">QR స్కాన్ చేసి పంపండి</string>
+    <string name="send_pc_instead">PC కి పంపండి</string>
+    <string name="scan_prompt">తీసుకునే ఫోన్‌లో ఉన్న QR కోడ్ స్కాన్ చేయండి</string>
+    <string name="bad_qr">ఇది Flikk Share కోడ్ కాదు</string>
+    <string name="reading_folder">ఫోల్డర్ చదువుతోంది…</string>
+    <string name="loading_apps">యాప్స్ లోడ్ అవుతున్నాయి…</string>
+    <string name="add">జోడించు</string>
+    <string name="clear">క్లియర్</string>
+    <string name="split_apk">split యాప్ · install కాకపోవచ్చు</string>
+
+    <string name="receive_title">తీసుకోవడానికి రెడీ</string>
+    <string name="receive_hint">ఇంకో ఫోన్‌లో Flikk Share → పంపండి → QR స్కాన్ చేసి పంపండి</string>
+    <string name="starting">రెడీ అవుతోంది…</string>
+    <string name="mode_direct">⚡ Wi-Fi Direct రెడీ · %s</string>
+    <string name="mode_lan">అదే Wi-Fi లో మాత్రమే (Wi-Fi Direct అందుబాటులో లేదు)</string>
+    <string name="saved_to">Downloads/Flikk Share లో సేవ్ అవుతాయి</string>
+
+    <string name="connecting">%s కి కనెక్ట్ అవుతోంది…</string>
+    <string name="connecting_plain">కనెక్ట్ అవుతోంది…</string>
+    <string name="sending_to">%s కి పంపుతోంది</string>
+    <string name="receiving_from">%s నుండి వస్తోంది</string>
+    <string name="done_sent">%1$d ఫైల్స్ పంపాం · %2$s</string>
+    <string name="done_recv">%1$d ఫైల్స్ వచ్చాయి · %2$s</string>
+    <string name="avg_speed">సగటు %s</string>
+    <string name="failed">ట్రాన్స్‌ఫర్ ఆగిపోయింది</string>
+    <string name="file_of">ఫైల్ %1$d / %2$d</string>
+    <string name="speed_eta">%1$s/s · ఇంకా %2$s</string>
+    <string name="via">%s ద్వారా</string>
+    <string name="retry">మళ్ళీ ప్రయత్నించండి (ఆగిన చోటు నుండే)</string>
+    <string name="done">అయిపోయింది</string>
+    <string name="stop">ఆపండి</string>
+    <string name="open_downloads">ఫైల్స్ చూడండి</string>
+
+    <string name="pc_title">PC తో షేర్</string>
+    <string name="pc_hint">కంప్యూటర్‌ని ఈ ఫోన్ ఉన్న Wi-Fi కి (లేదా ఈ ఫోన్ హాట్‌స్పాట్‌కి) కనెక్ట్ చేసి, ఈ లింక్ ఏ బ్రౌజర్‌లో అయినా ఓపెన్ చేయండి:</string>
+    <string name="pc_no_wifi">ముందు Wi-Fi లేదా హాట్‌స్పాట్ ఆన్ చేయండి</string>
+    <string name="pc_files">%d ఫైల్స్ షేర్ అయ్యాయి · PC నుండి కూడా ఈ ఫోన్‌కి పంపొచ్చు</string>
+    <string name="pc_stats">PC డౌన్‌లోడ్స్: %1$d · PC నుండి వచ్చినవి: %2$d</string>
+    <string name="pc_choose">షేర్ చేసే ఫైల్స్ ఎంచుకోండి</string>
+
+    <string name="history_empty">ఇంకా ఏమీ లేదు. మీరు పంపిన, తీసుకున్న ఫైల్స్ ఇక్కడ కనిపిస్తాయి.</string>
+    <string name="sent">పంపినవి</string>
+    <string name="received">వచ్చినవి</string>
+    <string name="from_pc">PC నుండి</string>
+    <string name="interrupted">ఆగిపోయింది</string>
+    <string name="clear_history">హిస్టరీ క్లియర్</string>
+
+    <string name="need_perm">ఫోన్లని నేరుగా Wi-Fi తో కలపడానికి Flikk Share కి “Nearby devices” (పాత ఫోన్లలో Location) పర్మిషన్ కావాలి. ఏదీ ఎక్కడికీ అప్‌లోడ్ అవ్వదు.</string>
+    <string name="wifi_off">Wi-Fi ఆన్ చేయండి (ఏ నెట్‌వర్క్‌కీ కనెక్ట్ అవ్వాల్సిన అవసరం లేదు)</string>
+    <string name="location_off">Location ఆన్ చేయండి — ఈ ఫోన్‌లో Wi-Fi Direct కి Android అడుగుతుంది</string>
+    <string name="settings">సెట్టింగ్స్</string>
+    <string name="notif_channel">ట్రాన్స్‌ఫర్లు</string>
+    <string name="notif_receiving">ఫైల్స్ తీసుకోవడానికి రెడీ</string>
+    <string name="notif_pc">PC తో షేర్ అవుతోంది</string>
+</resources>
